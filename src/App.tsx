@@ -1,14 +1,25 @@
-import { useState } from "react";
 import "./App.css";
 import WordleGrid from "./components/WordleGrid";
-import styled from "styled-components";
+import { useState, useEffect } from "react";
 
 function App() {
-  const correctWord = "react";
+  const [word, setWord] = useState("");
+
+  useEffect(() => {
+    fetch("http://localhost:3000/word")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("New word:", data.word);
+        // Set the word in your app's state
+        setWord(data.word);
+      })
+      .catch((error) => console.error("Error fetching word:", error));
+  }, []);
+
   return (
     <>
       <h1>Backwordle</h1>
-      <WordleGrid correctWord={correctWord} />
+      <WordleGrid correctWord={word} />
     </>
   );
 }

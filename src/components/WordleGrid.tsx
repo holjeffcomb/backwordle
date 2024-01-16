@@ -18,6 +18,7 @@ function WordleGrid({ correctWord }) {
 
   return (
     <div>
+      <h2>Total Count: {guesses.length}</h2>
       {guesses.map((guessObj, rowIndex) => (
         <div key={rowIndex} className="word-row" style={{ display: "flex" }}>
           {guessObj.guess.split("").map((letter, index) => (
@@ -53,9 +54,9 @@ function getColorFromResult(result) {
   }
 }
 
-function wordleGuess(correctWord, guessedWord) {
-  let result = new Array(guessedWord.length).fill("gray");
-  let correctLetters = correctWord.split("");
+function wordleGuess(correctWord: string, guessedWord: string) {
+  const result = new Array(guessedWord.length).fill("gray");
+  const correctLetters = correctWord.split("");
 
   // First, check for correct letters in the correct position (green)
   for (let i = 0; i < guessedWord.length; i++) {

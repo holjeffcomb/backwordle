@@ -8,7 +8,8 @@ const BoxStyles = styled.div`
   margin: "2px";
   text-align: "center";
   line-height: "50px"; // Vertically center the text
-  background-color: color;
+  color: black;
+  font-size: 25px;
 `;
 
 type WordBoxProps = {
@@ -17,7 +18,7 @@ type WordBoxProps = {
 };
 
 function WordBox({ letter, color }: WordBoxProps) {
-  return <BoxStyles style={{ color }}>{letter}</BoxStyles>;
+  return <BoxStyles style={{ backgroundColor: color }}>{letter}</BoxStyles>;
 }
 
 export default WordBox;
