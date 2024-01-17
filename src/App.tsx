@@ -10,8 +10,9 @@ function App() {
       .then((response) => response.json())
       .then((data) => {
         console.log("New word:", data.word);
-        // Set the word in your app's state
-        setWord(data.word);
+        const reversedWord = data.word.split("").reverse().join("");
+        console.log("Word reversed: ", reversedWord);
+        setWord(reversedWord);
       })
       .catch((error) => console.error("Error fetching word:", error));
   }, []);
