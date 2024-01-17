@@ -18,7 +18,7 @@ function WordleGrid({ correctWord }) {
 
   return (
     <div>
-      <h2>Total Count: {guesses.length}</h2>
+      <h3>{guesses.length} :tnuoc</h3>
       {guesses.map((guessObj, rowIndex) => (
         <div key={rowIndex} className="word-row" style={{ display: "flex" }}>
           {guessObj.guess.split("").map((letter, index) => (
@@ -37,7 +37,7 @@ function WordleGrid({ correctWord }) {
           onChange={(e) => setCurrentGuess(e.target.value)}
           maxLength={correctWord.length}
         />
-        <button onClick={handleGuess}>Guess</button>
+        <button onClick={handleGuess}>sseug</button>
       </div>
     </div>
   );
