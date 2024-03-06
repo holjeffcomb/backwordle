@@ -6,6 +6,10 @@ function App() {
   const [word, setWord] = useState("");
 
   useEffect(() => {
+    fetchWord();
+  }, []);
+
+  const fetchWord = () => {
     fetch("http://localhost:3000/word")
       .then((response) => response.json())
       .then((data) => {
@@ -15,12 +19,12 @@ function App() {
         setWord(reversedWord);
       })
       .catch((error) => console.error("Error fetching word:", error));
-  }, []);
+  };
 
   return (
     <>
       <h1>Backwordle</h1>
-      <WordleGrid correctWord={word} />
+      <WordleGrid correctWord={word} fetchNewWord={fetchWord} />
     </>
   );
 }

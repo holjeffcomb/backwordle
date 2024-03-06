@@ -1,7 +1,7 @@
 import { useState } from "react";
 import WordBox from "./WordBox";
 
-function WordleGrid({ correctWord }) {
+function WordleGrid({ correctWord, fetchNewWord }) {
   const [turn, setTurn] = useState(1);
   const [guesses, setGuesses] = useState([]);
   const [currentGuess, setCurrentGuess] = useState("");
@@ -28,6 +28,8 @@ function WordleGrid({ correctWord }) {
   const resetGame = () => {
     setTurn(1);
     setGameState("ongoing");
+    setGuesses([]);
+    fetchNewWord();
   };
 
   return (
@@ -40,8 +42,6 @@ function WordleGrid({ correctWord }) {
       ) : (
         <div></div>
       )}
-      <h3>{guesses.length} :tnuoc</h3>
-      <h3>{turn} :nrut</h3>
       {guesses.map((guessObj, rowIndex) => (
         <div key={rowIndex} className="word-row" style={{ display: "flex" }}>
           {guessObj.guess.split("").map((letter, index) => (
