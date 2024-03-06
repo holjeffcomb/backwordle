@@ -5,6 +5,7 @@ function WordleGrid({ correctWord }) {
   const [turn, setTurn] = useState(1);
   const [guesses, setGuesses] = useState([]);
   const [currentGuess, setCurrentGuess] = useState("");
+  const [gameState, setGameState] = useState("ongoing");
 
   const handleGuess = () => {
     setTurn(turn + 1);
@@ -18,13 +19,27 @@ function WordleGrid({ correctWord }) {
     }
 
     console.log("turn is now " + turn);
-    if (turn >= 5) {
+    if (turn >= 6) {
       console.log("GAME OVER");
+      setGameState("ended");
     }
+  };
+
+  const resetGame = () => {
+    setTurn(1);
+    setGameState("ongoing");
   };
 
   return (
     <div>
+      {gameState === "ended" ? (
+        <div>
+          <h3>Game Over</h3>
+          <button onClick={resetGame}>Play again</button>
+        </div>
+      ) : (
+        <div></div>
+      )}
       <h3>{guesses.length} :tnuoc</h3>
       <h3>{turn} :nrut</h3>
       {guesses.map((guessObj, rowIndex) => (
