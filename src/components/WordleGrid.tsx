@@ -1,21 +1,6 @@
 import { useState } from "react";
 import WordBox from "./WordBox";
-import styled from "styled-components";
-
-const InputStyles = styled.input`
-  font-family: "Crimson Text";
-  letter-spacing: 3px;
-`;
-
-const ButtonStyles = styled.button`
-  border-radius: 50%;
-  padding: 0.2em;
-  margin-left: 1em;
-  background-color: green;
-  border: solid 1px black;
-  width: 30px;
-  height: 30px;
-`;
+import Input from "./Input";
 
 interface ColorResult {
   result: "green" | "yellow" | "gray";
@@ -55,6 +40,46 @@ function WordleGrid({ correctWord, fetchNewWord }: WordleGridProps) {
     }
   };
 
+  function getColorFromResult(result: ColorResult["result"]) {
+    switch (result) {
+      case "green":
+        return "green";
+      case "yellow":
+        return "yellow";
+      default:
+        return "gray";
+    }
+  }
+
+  function wordleGuess(correctWord: string, guessedWord: string) {
+    const result = new Array(guessedWord.length).fill("gray");
+    const correctLetters: (string | null)[] = correctWord
+      .toUpperCase()
+      .split("");
+
+    // Mark green first
+    for (let i = 0; i < guessedWord.length; i++) {
+      if (guessedWord[i].toUpperCase() === correctWord[i].toUpperCase()) {
+        result[i] = "green";
+        correctLetters[i] = null; // This letter has been correctly guessed and should not be used again
+      }
+    }
+
+    // Then mark yellow, ensuring not to reuse green-marked letters
+    for (let i = 0; i < guessedWord.length; i++) {
+      if (result[i] !== "green") {
+        const guessedLetter = guessedWord[i].toUpperCase();
+        const indexInCorrectLetters = correctLetters.indexOf(guessedLetter);
+        if (indexInCorrectLetters !== -1) {
+          result[i] = "yellow";
+          correctLetters[indexInCorrectLetters] = null; // Mark this letter as used to avoid reusing it
+        }
+      }
+    }
+
+    return result;
+  }
+
   const resetGame = () => {
     setTurn(1);
     setGameState("ongoing");
@@ -83,66 +108,14 @@ function WordleGrid({ correctWord, fetchNewWord }: WordleGridProps) {
           ))}
         </div>
       ))}
-      <div>
-        <InputStyles
-          type="text"
-          value={currentGuess.toUpperCase()}
-          onChange={(e) => setCurrentGuess(e.target.value)}
-          maxLength={correctWord.length}
-        />
-        <ButtonStyles onClick={handleGuess}>
-          <svg
-            width="8"
-            height="10"
-            viewBox="0 0 10 12"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              fillRule="evenodd"
-              clipRule="evenodd"
-              d="M4.29289 0.292893C4.68342 -0.0976311 5.31658 -0.0976311 5.70711 0.292893L9.70711 4.29289C10.0976 4.68342 10.0976 5.31658 9.70711 5.70711C9.31658 6.09763 8.68342 6.09763 8.29289 5.70711L6 3.41421L6 11C6 11.5523 5.55229 12 5 12C4.44772 12 4 11.5523 4 11L4 3.41421L1.70711 5.70711C1.31658 6.09763 0.683418 6.09763 0.292893 5.70711C-0.0976311 5.31658 -0.0976311 4.68342 0.292893 4.29289L4.29289 0.292893Z"
-              fill="white"
-            />
-          </svg>
-        </ButtonStyles>
-      </div>
+      <Input
+        correctWord={correctWord}
+        handleGuess={handleGuess}
+        currentGuess={currentGuess}
+        setCurrentGuess={setCurrentGuess}
+      />
     </div>
   );
-}
-
-function getColorFromResult(result: ColorResult["result"]) {
-  switch (result) {
-    case "green":
-      return "green";
-    case "yellow":
-      return "yellow";
-    default:
-      return "gray";
-  }
-}
-
-function wordleGuess(correctWord: string, guessedWord: string) {
-  const result = new Array(guessedWord.length).fill("gray");
-  const correctLetters: (string | null)[] = correctWord.split("");
-
-  // First, check for correct letters in the correct position (green)
-  for (let i = 0; i < guessedWord.length; i++) {
-    if (guessedWord[i].toUpperCase() === correctWord[i].toUpperCase()) {
-      result[i] = "green";
-      correctLetters[i] = null; // Mark this letter as used
-    }
-  }
-
-  // Then, check for correct letters in the wrong position (yellow)
-  for (let i = 0; i < guessedWord.length; i++) {
-    if (result[i] !== "green" && correctLetters.includes(guessedWord[i])) {
-      result[i] = "yellow";
-      correctLetters[correctLetters.indexOf(guessedWord[i])] = null; // Mark this letter as used
-    }
-  }
-
-  return result;
 }
 
 export default WordleGrid;

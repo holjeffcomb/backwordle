@@ -1,6 +1,14 @@
 import "./App.css";
 import WordleGrid from "./components/WordleGrid";
 import { useState, useEffect } from "react";
+import Footer from "./components/Footer";
+import Header from "./components/Header";
+import styled from "styled-components";
+
+const LayoutStyles = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 function App() {
   const [word, setWord] = useState("");
@@ -22,12 +30,11 @@ function App() {
   };
 
   return (
-    <>
-      <h1 className="title">
-        Bac<span id="bwards">k</span>wordle
-      </h1>
+    <LayoutStyles>
+      <Header />
       <WordleGrid correctWord={word} fetchNewWord={fetchWord} />
-    </>
+      <Footer />
+    </LayoutStyles>
   );
 }
 
