@@ -2,10 +2,12 @@ import { useState } from "react";
 import WordBox from "./WordBox";
 
 function WordleGrid({ correctWord }) {
+  const [turn, setTurn] = useState(1);
   const [guesses, setGuesses] = useState([]);
   const [currentGuess, setCurrentGuess] = useState("");
 
   const handleGuess = () => {
+    setTurn(turn + 1);
     if (currentGuess.length === correctWord.length) {
       const guessResult = wordleGuess(correctWord, currentGuess);
       setGuesses([...guesses, { guess: currentGuess, result: guessResult }]);
@@ -14,11 +16,17 @@ function WordleGrid({ correctWord }) {
       // Handle error for incorrect length
       alert("Guess must be " + correctWord.length + " letters");
     }
+
+    console.log("turn is now " + turn);
+    if (turn >= 5) {
+      console.log("GAME OVER");
+    }
   };
 
   return (
     <div>
       <h3>{guesses.length} :tnuoc</h3>
+      <h3>{turn} :nrut</h3>
       {guesses.map((guessObj, rowIndex) => (
         <div key={rowIndex} className="word-row" style={{ display: "flex" }}>
           {guessObj.guess.split("").map((letter, index) => (
@@ -43,7 +51,7 @@ function WordleGrid({ correctWord }) {
   );
 }
 
-function getColorFromResult(result) {
+function getColorFromResult(result: "green" | "yellow" | "gray") {
   switch (result) {
     case "green":
       return "green";
