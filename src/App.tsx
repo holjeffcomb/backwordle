@@ -23,7 +23,7 @@ function App() {
 
   return (
     <>
-      <h1>Backwordle</h1>
+      <h1 className="title">Backwordle</h1>
       <WordleGrid correctWord={word} fetchNewWord={fetchWord} />
     </>
   );
