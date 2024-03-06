@@ -74,3 +74,8 @@
 .title {
   font-family: "Gloria Hallelujah";
 }
+
+#bwards {
+  display: inline-block;
+  transform: scaleX(-1) rotate(10deg);
+}

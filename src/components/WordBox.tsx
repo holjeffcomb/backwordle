@@ -4,13 +4,13 @@ const BoxStyles = styled.div`
   width: 50px;
   height: 50px;
   border: 1px solid #000;
-  display: "inline-block";
-  margin: "2px";
-  text-align: "center";
-  line-height: "50px"; // Vertically center the text
+  display: flex; // Use flexbox for alignment
+  justify-content: center; // Horizontally center the content
+  align-items: center; // Vertically center the content
+  margin: 2px;
   color: black;
   font-size: 25px;
-  font-family: "Crimson Text";
+  font-family: "Crimson Text", serif; // Ensure fallback fonts are specified
 `;
 
 type WordBoxProps = {
