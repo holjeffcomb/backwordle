@@ -17,6 +17,10 @@ const ButtonStyles = styled.button`
   height: 30px;
 `;
 
+interface ColorResult {
+  result: "green" | "yellow" | "gray";
+}
+
 interface WordleGridProps {
   correctWord: string;
   fetchNewWord: () => void;
@@ -24,7 +28,7 @@ interface WordleGridProps {
 
 interface Guess {
   guess: string;
-  result: ("green" | "yellow" | "gray")[];
+  result: ColorResult["result"][];
 }
 
 function WordleGrid({ correctWord, fetchNewWord }: WordleGridProps) {
@@ -107,7 +111,7 @@ function WordleGrid({ correctWord, fetchNewWord }: WordleGridProps) {
   );
 }
 
-function getColorFromResult(result: "green" | "yellow" | "gray") {
+function getColorFromResult(result: ColorResult["result"]) {
   switch (result) {
     case "green":
       return "green";
