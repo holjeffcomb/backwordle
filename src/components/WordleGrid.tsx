@@ -22,21 +22,37 @@ function WordleGrid({ correctWord, fetchNewWord }: WordleGridProps) {
   const [currentGuess, setCurrentGuess] = useState("");
   const [gameState, setGameState] = useState("ongoing");
 
-  const handleGuess = () => {
-    setTurn(turn + 1);
-    if (currentGuess.length === correctWord.length) {
-      const guessResult = wordleGuess(correctWord, currentGuess);
-      setGuesses([...guesses, { guess: currentGuess, result: guessResult }]);
-      setCurrentGuess(""); // Reset the current guess input
-    } else {
-      // Handle error for incorrect length
-      alert("Guess must be " + correctWord.length + " letters");
-    }
+  const checkIfWord = async (word: string): Promise<boolean> => {
+    const response = await fetch(
+      `http://localhost:3000/check-word/${reverseString(word)}`
+    );
+    const data = await response.text();
+    return data === "true";
+  };
 
-    console.log("turn is now " + turn);
-    if (turn >= 6) {
-      console.log("GAME OVER");
-      setGameState("ended");
+  function reverseString(str: string): string {
+    return str.split("").reduce((acc, char) => char + acc, "");
+  }
+
+  const handleGuess = async () => {
+    if (await checkIfWord(currentGuess)) {
+      setTurn(turn + 1);
+      if (currentGuess.length === correctWord.length) {
+        const guessResult = wordleGuess(correctWord, currentGuess);
+        setGuesses([...guesses, { guess: currentGuess, result: guessResult }]);
+        setCurrentGuess(""); // Reset the current guess input
+      } else {
+        // Handle error for incorrect length
+        alert("Guess must be " + correctWord.length + " letters");
+      }
+
+      console.log("turn is now " + turn);
+      if (turn >= 6) {
+        console.log("GAME OVER");
+        setGameState("ended");
+      }
+    } else {
+      console.log("NOT A WORD");
     }
   };
 
