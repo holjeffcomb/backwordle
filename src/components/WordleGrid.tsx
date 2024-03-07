@@ -16,15 +16,24 @@ interface Guess {
   result: ColorResult["result"][];
 }
 
+const emptyGrid: Guess[] = [
+  { guess: "     ", result: ["gray", "gray", "gray", "gray", "gray"] },
+  { guess: "     ", result: ["gray", "gray", "gray", "gray", "gray"] },
+  { guess: "     ", result: ["gray", "gray", "gray", "gray", "gray"] },
+  { guess: "     ", result: ["gray", "gray", "gray", "gray", "gray"] },
+  { guess: "     ", result: ["gray", "gray", "gray", "gray", "gray"] },
+  { guess: "     ", result: ["gray", "gray", "gray", "gray", "gray"] },
+];
+
 function WordleGrid({ correctWord, fetchNewWord }: WordleGridProps) {
   const [turn, setTurn] = useState(1);
-  const [guesses, setGuesses] = useState<Guess[]>([]);
+  const [guesses, setGuesses] = useState<Guess[]>(emptyGrid);
   const [currentGuess, setCurrentGuess] = useState("");
   const [gameState, setGameState] = useState("ongoing");
 
   const checkIfWord = async (word: string): Promise<boolean> => {
     const response = await fetch(
-      `http://localhost:3000/check-word/${reverseString(word)}`
+      `http://localhost:3000/check-word/${reverseString(word).toLowerCase()}`
     );
     const data = await response.text();
     return data === "true";
@@ -39,7 +48,9 @@ function WordleGrid({ correctWord, fetchNewWord }: WordleGridProps) {
       setTurn(turn + 1);
       if (currentGuess.length === correctWord.length) {
         const guessResult = wordleGuess(correctWord, currentGuess);
-        setGuesses([...guesses, { guess: currentGuess, result: guessResult }]);
+        const newGuessGrid = [...guesses];
+        newGuessGrid[turn - 1] = { guess: currentGuess, result: guessResult };
+        setGuesses(newGuessGrid);
         setCurrentGuess(""); // Reset the current guess input
       } else {
         // Handle error for incorrect length
@@ -99,7 +110,7 @@ function WordleGrid({ correctWord, fetchNewWord }: WordleGridProps) {
   const resetGame = () => {
     setTurn(1);
     setGameState("ongoing");
-    setGuesses([]);
+    setGuesses(emptyGrid);
     fetchNewWord();
   };
 
