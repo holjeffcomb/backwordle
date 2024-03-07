@@ -8,7 +8,7 @@ const BoxStyles = styled.div`
   justify-content: center; // Horizontally center the content
   align-items: center; // Vertically center the content
   margin: 2px;
-  color: black;
+  color: #000000;
   font-size: 25px;
   font-family: "Crimson Text", serif; // Ensure fallback fonts are specified
 `;
