@@ -14,17 +14,27 @@ const LayoutStyles = styled.div`
 `;
 
 function App() {
-  const [word, setWord] = useState("");
+  const [word, setWord] = useState<string>("");
 
   useEffect(() => {
     fetchWord();
   }, []);
 
+  const reverseWord = (word: string): string => {
+    return word.split("").reverse().join("");
+  };
+
+  const newWord = async () => {
+    const response = await fetch("http://localhost:3000/new-word");
+    const data = await response.text();
+    setWord(reverseWord(data));
+  };
+
   const fetchWord = () => {
     fetch("http://localhost:3000/word")
       .then((response) => response.json())
       .then((data) => {
-        const reversedWord = data.word.split("").reverse().join("");
+        const reversedWord = reverseWord(data.word);
         setWord(reversedWord);
       })
       .catch((error) => console.error("Error fetching word:", error));
@@ -33,7 +43,7 @@ function App() {
   return (
     <LayoutStyles>
       <Header />
-      <WordleGrid correctWord={word} fetchNewWord={fetchWord} />
+      <WordleGrid correctWord={word} newWord={newWord} />
       <Footer />
     </LayoutStyles>
   );

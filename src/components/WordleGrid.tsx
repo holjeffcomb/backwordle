@@ -8,7 +8,7 @@ interface ColorResult {
 
 interface WordleGridProps {
   correctWord: string;
-  fetchNewWord: () => void;
+  newWord: () => void;
 }
 
 interface Guess {
@@ -25,7 +25,7 @@ const emptyGrid: Guess[] = [
   { guess: "     ", result: ["gray", "gray", "gray", "gray", "gray"] },
 ];
 
-function WordleGrid({ correctWord, fetchNewWord }: WordleGridProps) {
+function WordleGrid({ correctWord, newWord }: WordleGridProps) {
   const [turn, setTurn] = useState(1);
   const [guesses, setGuesses] = useState<Guess[]>(emptyGrid);
   const [currentGuess, setCurrentGuess] = useState("");
@@ -44,26 +44,23 @@ function WordleGrid({ correctWord, fetchNewWord }: WordleGridProps) {
   }
 
   const handleGuess = async () => {
-    if (await checkIfWord(currentGuess)) {
-      setTurn(turn + 1);
-      if (currentGuess.length === correctWord.length) {
+    if (currentGuess.length !== 5) {
+      alert("Guess must be " + correctWord.length + " letters");
+    } else {
+      if (await checkIfWord(currentGuess)) {
+        setTurn(turn + 1);
         const guessResult = wordleGuess(correctWord, currentGuess);
         const newGuessGrid = [...guesses];
         newGuessGrid[turn - 1] = { guess: currentGuess, result: guessResult };
         setGuesses(newGuessGrid);
         setCurrentGuess(""); // Reset the current guess input
+        if (turn >= 6) {
+          console.log("GAME OVER");
+          setGameState("ended");
+        }
       } else {
-        // Handle error for incorrect length
-        alert("Guess must be " + correctWord.length + " letters");
+        alert("Not a word");
       }
-
-      console.log("turn is now " + turn);
-      if (turn >= 6) {
-        console.log("GAME OVER");
-        setGameState("ended");
-      }
-    } else {
-      console.log("NOT A WORD");
     }
   };
 
@@ -111,7 +108,7 @@ function WordleGrid({ correctWord, fetchNewWord }: WordleGridProps) {
     setTurn(1);
     setGameState("ongoing");
     setGuesses(emptyGrid);
-    fetchNewWord();
+    newWord();
   };
 
   return (
@@ -141,6 +138,8 @@ function WordleGrid({ correctWord, fetchNewWord }: WordleGridProps) {
         currentGuess={currentGuess}
         setCurrentGuess={setCurrentGuess}
       />
+
+      <button onClick={resetGame}>New Word</button>
     </div>
   );
 }
